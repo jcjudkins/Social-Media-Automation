@@ -17,8 +17,8 @@ flower==2.0.1
 
 # Social Media APIs
 tweepy==4.14.0  # Twitter
-atproto==0.0.29  # Bluesky - compatible with Python 3.11
-# LinkedIn - using requests-oauthlib for OAuth2 flow (see below)
+atproto==0.0.65  # Bluesky
+linkedin-api==2.3.1  # LinkedIn
 Mastodon.py==1.8.1  # Mastodon
 facebook-sdk==3.1.0  # Instagram (via Facebook Graph API)
 
