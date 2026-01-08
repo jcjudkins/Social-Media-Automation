@@ -1,0 +1,114 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  db:
+    image: postgres:15-alpine
+    container_name: social_media_db
+    environment:
+      POSTGRES_DB: social_media_automation
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis
+  redis:
+    image: redis:7-alpine
+    container_name: social_media_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # Django Web Application
+  web:
+    build: .
+    container_name: social_media_web
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py collectstatic --noinput &&
+             gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 3"
+    volumes:
+      - .:/app
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/admin/login/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Celery Worker
+  celery:
+    build: .
+    container_name: social_media_celery
+    command: celery -A config worker -l info -Q posting,analytics,media,default
+    volumes:
+      - .:/app
+      - media_volume:/app/media
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis
+    restart: on-failure
+
+  # Celery Beat (Scheduler)
+  celery-beat:
+    build: .
+    container_name: social_media_celery_beat
+    command: celery -A config beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis
+    restart: on-failure
+
+  # Flower (Celery Monitoring)
+  flower:
+    build: .
+    container_name: social_media_flower
+    command: celery -A config flower --port=5555
+    ports:
+      - "5555:5555"
+    env_file:
+      - .env
+    depends_on:
+      - celery
+      - redis
+    restart: on-failure
+
+volumes:
+  postgres_data:
+  redis_data:
+  static_volume:
+  media_volume:
+
+networks:
+  default:
+    name: social_media_network
