@@ -2,7 +2,7 @@
 
 **Cross-platform social media scheduling and automation tool**
 
-Built by [Jason Judkins](https://jasonjudkins.dev) - DjangoCon 2022 Speaker
+Built by [Jason Judkins](https://judkins.dev) - DjangoCon US Planner and Marketing Chair
 
 ## 🎯 What It Does
 
@@ -53,10 +53,9 @@ Post to multiple social media platforms from a single dashboard:
 ## 🧑‍💻 Author
 
 **Jason Judkins**
-- DjangoCon US 2022 Speaker
 - DjangoCon US Marketing Chair
 - Django.social Raleigh/Durham Organizer
-- [jasonjudkins.dev](https://jasonjudkins.dev)
+- [judkins.dev](https://judkins.dev)
 
 ## 📝 Status
 
