@@ -1612,8 +1612,8 @@ Implement per-user and per-platform rate limiting to prevent abuse and stay with
 
 ### A. Technology Versions
 
-- Python: 3.11+
-- Django: 6.0
+- Python: 3.11+ (3.12+ required for Django 6.0)
+- Django: 5.1
 - PostgreSQL: 15
 - Redis: 7
 - Celery: 5.3+

@@ -1,5 +1,5 @@
 # Core Django
-Django>=6.0,<7.0
+Django>=5.1,<5.2  # Django 6.0+ requires Python 3.12
 psycopg2-binary==2.9.9
 python-decouple==3.8
 
@@ -17,8 +17,8 @@ flower==2.0.1
 
 # Social Media APIs
 tweepy==4.14.0  # Twitter
-atproto==0.0.40  # Bluesky
-python-linkedin-v2==0.1.8  # LinkedIn
+atproto==0.0.29  # Bluesky - compatible with Python 3.11
+# LinkedIn - using requests-oauthlib for OAuth2 flow (see below)
 Mastodon.py==1.8.1  # Mastodon
 facebook-sdk==3.1.0  # Instagram (via Facebook Graph API)
 
