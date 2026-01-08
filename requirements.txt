@@ -17,8 +17,8 @@ flower==2.0.1
 
 # Social Media APIs
 tweepy==4.14.0  # Twitter
-atproto==0.0.40  # Bluesky
-python-linkedin-v2==0.1.8  # LinkedIn
+atproto==0.0.65  # Bluesky
+# LinkedIn
 Mastodon.py==1.8.1  # Mastodon
 facebook-sdk==3.1.0  # Instagram (via Facebook Graph API)
 
