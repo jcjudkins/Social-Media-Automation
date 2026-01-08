@@ -458,6 +458,61 @@ class BlueskyPlatform(SocialMediaPlatformBase):
             }
 ```
 
+#### LinkedIn Integration
+```python
+# social_media/platforms/linkedin.py
+from linkedin_api import Linkedin
+from .base import SocialMediaPlatformBase
+
+class LinkedInPlatform(SocialMediaPlatformBase):
+    def _initialize_client(self):
+        # linkedin-api uses email/password or cookies for authentication
+        # For OAuth flow, you'll need to use requests-oauthlib separately
+        # This is a simplified example using stored credentials
+        client = Linkedin(
+            self.account.platform_username,
+            self.account.access_token
+        )
+        return client
+
+    def post_text(self, content: str, **kwargs) -> Dict[str, Any]:
+        try:
+            # Share text post
+            response = self.client.post({
+                'content': {
+                    'contentEntities': [],
+                    'title': content[:100],  # First 100 chars as title
+                    'description': content
+                },
+                'distribution': {
+                    'linkedInDistributionTarget': {}
+                }
+            })
+            return {
+                'success': True,
+                'platform_post_id': response.get('id', ''),
+                'platform_post_url': response.get('url', ''),
+                'posted_at': timezone.now()
+            }
+        except Exception as e:
+            return {
+                'success': False,
+                'error': str(e)
+            }
+
+    def validate_content(self, content: str, media_count: int = 0) -> Dict[str, Any]:
+        errors = []
+        if len(content) > 3000:
+            errors.append(f"Content exceeds 3000 characters ({len(content)})")
+        if media_count > 9:
+            errors.append(f"Too many media files (max 9, got {media_count})")
+
+        return {
+            'valid': len(errors) == 0,
+            'errors': errors
+        }
+```
+
 ### 3.3 Platform Factory
 
 ```python
