@@ -25,7 +25,7 @@ Post to multiple social media platforms from a single dashboard:
 ## 🛠️ Tech Stack
 
 **Backend:**
-- Django 5.0
+- Django 5.1
 - Django REST Framework
 - Celery + Redis (task scheduling)
 - PostgreSQL
